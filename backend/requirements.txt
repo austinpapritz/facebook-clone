@@ -1,3 +1,7 @@
 fastapi
 uvicorn
 python-dotenv
+pydantic==2.6.4
+faker==18.11.2
+SQLAlchemy==2.0.29
+psycopg2-binary==2.9.9

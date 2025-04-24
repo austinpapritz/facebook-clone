@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.db.init_db import init_db
-from app.api.v1.routes import users
+from app.api.v1.routes import user, post, comment
 
 app = FastAPI()
 
@@ -17,4 +17,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# app.include_router(users.router, prefix="/api/v1")
+app.include_router(user.router)
+app.include_router(post.router)
+app.include_router(comment.router)
