@@ -2,6 +2,7 @@ from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 from datetime import datetime
 
+
 # Base User Schema with shared attributes
 class UserBase(BaseModel):
     username: str
@@ -38,7 +39,6 @@ class UserInDB(UserBase):
     created_at: datetime
     updated_at: datetime
 
-
     class Config:
         orm_mode = True
 
@@ -49,7 +49,6 @@ class UserSchema(UserBase):
     last_login: Optional[datetime] = None
     created_at: datetime
     updated_at: datetime
-
 
     class Config:
         orm_mode = True

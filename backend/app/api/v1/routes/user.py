@@ -35,16 +35,13 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
       (User.username == user.username) | (User.email == user.email)
     ).first()
 
-
     if existing_user:
         raise HTTPException(
               status_code=status.HTTP_400_BAD_REQUEST,
               detail=f"Username or email already exists"
         )
 
-
     password_hash = hashlib.sha256(user.password.encode()).hexdigest()
-
 
     db_user = User(
         username=user.username,
@@ -57,7 +54,6 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
         role=user.role
     )
 
-
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -68,28 +64,22 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 def update_user(user_id: int, user_update: UserUpdate, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.id == user_id).first()
 
-
     if db_user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"User with ID {user_id} not found"
         )
 
-
     update_data = user_update.dict(exclude_unset=True)
-
 
     if "password" in update_data:
         password = update_data.pop("password")
         update_data["password_hash"] = hashlib.sha256(password.encode()).hexdigest()
 
-
     for key, value in update_data.items():
         setattr(db_user, key, value)
 
-
     db_user.updated_at = datetime.now()
-
 
     db.commit()
     db.refresh(db_user)
@@ -100,13 +90,11 @@ def update_user(user_id: int, user_update: UserUpdate, db: Session = Depends(get
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.id == user_id).first()
 
-
     if db_user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"User with ID {user_id} not found"
         )
-
 
     db.delete(db_user)
     db.commit()
@@ -122,10 +110,8 @@ def login_user(user_id: int, db: Session = Depends(get_db)):
             detail=f"User with ID {user_id} not found"
         )
 
-
     user.last_login = datetime.now()
     db.commit()
     db.refresh(user)
-
 
     return user
