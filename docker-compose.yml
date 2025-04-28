@@ -26,6 +26,14 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+  test-db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: fastapi
+      POSTGRES_PASSWORD: fastapi
+      POSTGRES_DB: test_facebook_clone
+    ports:
+      - "5433:5432" 
 
 volumes:
   postgres_data:

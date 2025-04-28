@@ -6,10 +6,7 @@ from app.db.base import Base
 from app.db.dependencies import get_db
 from app.main import app
 
-# Test database URL - for local development
-TEST_DATABASE_URL = "postgresql://fastapi:fastapi@localhost:5432/test_facebook_clone"
-# For Docker environment
-# TEST_DATABASE_URL = "postgresql://fastapi:fastapi@db:5432/test_facebook_clone"
+TEST_DATABASE_URL = "postgresql://fastapi:fastapi@test-db:5432/test_facebook_clone"
 
 @pytest.fixture(scope="session")
 def engine():
