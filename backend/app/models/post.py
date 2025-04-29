@@ -9,6 +9,7 @@ class VisibilityType(str, enum.Enum):
     FRIENDS = "friends"
     PRIVATE = "private"
 
+
 class Post(Base):
     __tablename__ = "posts"
     id = Column(Integer, primary_key=True, index=True)

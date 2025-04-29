@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.db.init_db import init_db
 from app.api.v1.routes import user, post, comment
 
-
 app = FastAPI(title="Facebook Clone API", version="1.0.0")
 
 

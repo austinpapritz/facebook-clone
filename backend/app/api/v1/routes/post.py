@@ -6,7 +6,6 @@ from app.db.dependencies import get_db
 from app.models.post import Post
 from app.schemas.post import PostSchema, PostCreate, PostUpdate, PostWithUserSchema
 
-
 router = APIRouter()
 
 @router.get("/posts", response_model=List[PostSchema])

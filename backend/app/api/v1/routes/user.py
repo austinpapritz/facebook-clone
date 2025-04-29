@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime
 
-
 from app.db.dependencies import get_db
 from app.models.user import User
 from app.schemas.user import UserSchema, UserCreate, UserUpdate, UserInDB

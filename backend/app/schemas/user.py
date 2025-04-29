@@ -2,8 +2,6 @@ from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 from datetime import datetime
 
-
-# Base User Schema with shared attributes
 class UserBase(BaseModel):
     username: str
     email: EmailStr
@@ -14,12 +12,10 @@ class UserBase(BaseModel):
     role: str = "user"
 
 
-# Schema for creating a user
 class UserCreate(UserBase):
     password: str
 
 
-# Schema for updating a user
 class UserUpdate(BaseModel):
     username: Optional[str] = None
     email: Optional[EmailStr] = None
@@ -31,7 +27,6 @@ class UserUpdate(BaseModel):
     password: Optional[str] = None
 
 
-# Schema for DB representation (includes all fields including ids and timestamps)
 class UserInDB(UserBase):
     id: int
     password_hash: str
@@ -43,7 +38,6 @@ class UserInDB(UserBase):
         orm_mode = True
 
 
-# Schema returned to client (excludes sensitive data)
 class UserSchema(UserBase):
     id: int
     last_login: Optional[datetime] = None
