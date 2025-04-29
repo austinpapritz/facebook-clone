@@ -4,7 +4,7 @@ from typing import List
 
 from app.db.dependencies import get_db
 from app.models.post import Post
-from app.schemas.post import PostSchema, PostCreate, PostUpdate
+from app.schemas.post import PostSchema, PostCreate, PostUpdate, PostWithUserSchema
 
 
 router = APIRouter()
@@ -13,7 +13,7 @@ router = APIRouter()
 def get_posts(db: Session = Depends(get_db)):
     return db.query(Post).all()
 
-@router.get("/posts/{post_id}", response_model=PostSchema)
+@router.get("/posts/{post_id}", response_model=PostWithUserSchema)
 def get_post(post_id: int, db: Session = Depends(get_db)):
     post = db.query(Post).filter(Post.id == post_id).first()
     if post is None:
