@@ -8,9 +8,7 @@ from app.models.comment import Comment
 from app.db.session import SessionLocal
 import hashlib
 
-
 Base.metadata.create_all(bind=engine)
-
 
 def seed_data(db: Session):
     fake = Faker()
@@ -38,7 +36,6 @@ def seed_data(db: Session):
             comments.append(comment)
     db.add_all(comments)
     db.commit()
-
 
 def init_db():
     Base.metadata.create_all(bind=engine)

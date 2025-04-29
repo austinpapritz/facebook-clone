@@ -9,7 +9,6 @@ class VisibilityType(str, enum.Enum):
     FRIENDS = "friends"
     PRIVATE = "private"
 
-
 class Post(Base):
     __tablename__ = "posts"
     id = Column(Integer, primary_key=True, index=True)
@@ -20,5 +19,5 @@ class Post(Base):
     visibility = Column(Enum(VisibilityType), default=VisibilityType.PUBLIC)
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-    
+
     user = relationship("User", backref="posts")

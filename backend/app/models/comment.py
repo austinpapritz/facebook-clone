@@ -12,8 +12,8 @@ class Comment(Base):
     parent_id = Column(Integer, ForeignKey("comments.id"), nullable=True)
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-    
+
     user = relationship("User")
     post = relationship("Post", backref="comments")
-    
+
     replies = relationship("Comment", backref="parent", remote_side=[id])

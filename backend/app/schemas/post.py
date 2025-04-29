@@ -8,24 +8,20 @@ class VisibilityType(str, Enum):
     FRIENDS = "friends"
     PRIVATE = "private"
 
-
 class PostBase(BaseModel):
     title: Optional[str] = None
     content: str
     image_url: Optional[str] = None
     visibility: VisibilityType = VisibilityType.PUBLIC
 
-
 class PostCreate(PostBase):
     pass
-
 
 class PostUpdate(BaseModel):
     title: Optional[str] = None
     content: Optional[str] = None
     image_url: Optional[str] = None
     visibility: Optional[VisibilityType] = None
-
 
 class PostSchema(PostBase):
     id: int
@@ -41,6 +37,5 @@ class PostWithUserSchema(PostSchema):
 
     class Config:
         orm_mode = True
-
 
 from app.schemas.user import UserSchema

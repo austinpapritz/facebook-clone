@@ -5,11 +5,9 @@ from app.api.v1.routes import user, post, comment
 
 app = FastAPI(title="Facebook Clone API", version="1.0.0")
 
-
 @app.on_event("startup")
 def on_startup():
       init_db()
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -19,11 +17,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 app.include_router(user.router, prefix="/api/v1", tags=["users"])
 app.include_router(post.router, prefix="/api/v1", tags=["posts"])
 app.include_router(comment.router, prefix="/api/v1", tags=["comments"])
-
 
 @app.get("/")
 def read_root():

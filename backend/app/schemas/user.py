@@ -11,10 +11,8 @@ class UserBase(BaseModel):
     is_active: bool = True
     role: str = "user"
 
-
 class UserCreate(UserBase):
     password: str
-
 
 class UserUpdate(BaseModel):
     username: Optional[str] = None
@@ -26,7 +24,6 @@ class UserUpdate(BaseModel):
     role: Optional[str] = None
     password: Optional[str] = None
 
-
 class UserInDB(UserBase):
     id: int
     password_hash: str
@@ -36,7 +33,6 @@ class UserInDB(UserBase):
 
     class Config:
         orm_mode = True
-
 
 class UserSchema(UserBase):
     id: int
