@@ -59,7 +59,7 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     return db_user
 
 
-@router.put("/users/{user_id}", reponse_model=UserSchema)
+@router.put("/users/{user_id}", response_model=UserSchema)
 def update_user(user_id: int, user_update: UserUpdate, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.id == user_id).first()
 
