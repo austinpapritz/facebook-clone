@@ -35,7 +35,7 @@ def create_post(post: PostCreate, user_id: int, db: Session = Depends(get_db)):
 
     db.add(db_post)
     db.commit()
-    db.refresh()
+    db.refresh(db_post)
     return db_post
 
 
