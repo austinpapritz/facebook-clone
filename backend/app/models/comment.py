@@ -16,4 +16,5 @@ class Comment(Base):
     user = relationship("User")
     post = relationship("Post", backref="comments")
 
+    parent = relationship("Comment", back_populates="replies", remote_side=[id], foreign_keys=[parent_id])
     replies = relationship("Comment", backref="parent", remote_side=[id])
