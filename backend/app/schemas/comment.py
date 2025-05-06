@@ -1,6 +1,9 @@
 from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
+from typing import ForwardRef
+
+CommentWithRepliesRef = ForwardRef('CommentWithRepliesSchema')
 
 class CommentBase(BaseModel):
     content: str
@@ -20,18 +23,20 @@ class CommentSchema(CommentBase):
     updated_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class CommentWithUserSchema(CommentSchema):
     user: 'UserSchema'
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class CommentWithRepliesSchema(CommentSchema):
-    replies: List['CommentWithRepliesSchema'] = []
+    replies: List[CommentWithRepliesRef] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+CommentWithRepliesSchema.model_rebuild()
 
 from app.schemas.user import UserSchema

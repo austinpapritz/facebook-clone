@@ -30,12 +30,12 @@ class PostSchema(PostBase):
     updated_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class PostWithUserSchema(PostSchema):
     user: 'UserSchema'
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 from app.schemas.user import UserSchema

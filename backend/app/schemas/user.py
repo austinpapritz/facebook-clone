@@ -32,7 +32,7 @@ class UserInDB(UserBase):
     updated_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UserSchema(UserBase):
     id: int
@@ -41,4 +41,4 @@ class UserSchema(UserBase):
     updated_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
