@@ -3,8 +3,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 from fastapi.testclient import TestClient
-from asgi_lifespan import LifespanManager
-import asyncio
+import os
+import sys
 
 from app.db.base import Base
 from app.main import app
@@ -15,6 +15,20 @@ from app.models.comment import Comment
 
 # Use an in-memory SQLite database for testing
 TEST_SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+
+# Patch the app to skip init_db during tests
+@pytest.fixture(scope="session", autouse=True)
+def patch_app():
+    # Save the original startup event handlers
+    original_startup_handlers = app.router.on_startup.copy()
+    
+    # Clear the startup event handlers to prevent init_db from running
+    app.router.on_startup.clear()
+    
+    yield
+    
+    # Restore the original startup event handlers after tests
+    app.router.on_startup = original_startup_handlers
 
 @pytest.fixture(scope="function")
 def test_engine():
@@ -48,20 +62,6 @@ def client(test_db):
     app.dependency_overrides[get_db] = override_get_db
     with TestClient(app) as client:
         yield client
-    app.dependency_overrides.clear()
-
-@pytest.fixture(scope="function")
-async def async_client(test_db):
-    # Override the get_db dependency to use the test database
-    def override_get_db():
-        try:
-            yield test_db
-        finally:
-            pass
-
-    app.dependency_overrides[get_db] = override_get_db
-    async with LifespanManager(app):
-        yield TestClient(app)
     app.dependency_overrides.clear()
 
 @pytest.fixture(scope="function")
