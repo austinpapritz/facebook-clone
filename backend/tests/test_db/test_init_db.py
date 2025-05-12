@@ -3,6 +3,7 @@ from app.db.init_db import seed_data
 from app.models.user import User
 from app.models.post import Post
 from app.models.comment import Comment
+import time
 
 def test_seed_data(test_db):
     """Test that the seed_data function properly populates the database."""
@@ -40,20 +41,25 @@ def test_seed_data(test_db):
 
 def test_init_db_idempotent(test_db, monkeypatch):
     """Test that running seed_data multiple times doesn't cause errors."""
-    # Mock the faker to ensure usernames are different each time
+    # Mock the faker to ensure predictable but unique usernames
     from faker import Faker
+    import random
+    
+    # Use timestamps to ensure uniqueness
+    timestamp1 = int(time.time() * 1000)
+    timestamp2 = timestamp1 + 1000  # Ensure different timestamps
     
     class MockFaker:
         def __init__(self):
             self.counter = 0
+            self.timestamp = timestamp1
             
         def user_name(self):
             self.counter += 1
-            # Ensure unique usernames each time
-            return f"testuser{self.counter}_{pytest.faker_run_count}"
+            return f"testuser{self.counter}_{self.timestamp}_{random.randint(1000, 9999)}"
             
         def email(self):
-            return f"test{self.counter}_{pytest.faker_run_count}@example.com"
+            return f"test{self.counter}_{self.timestamp}@example.com"
             
         def password(self, length=12):
             return "password123"
@@ -64,21 +70,25 @@ def test_init_db_idempotent(test_db, monkeypatch):
         def sentence(self):
             return "This is a test sentence."
     
-    # Set up a module-level counter to ensure unique names across test runs
-    if not hasattr(pytest, "faker_run_count"):
-        pytest.faker_run_count = 0
-    pytest.faker_run_count += 1
-    
-    # Apply the monkeypatch
+    # First run with timestamp1
     monkeypatch.setattr("app.db.init_db.Faker", lambda: MockFaker())
     
     # Run seed_data once
     seed_data(test_db)
     first_count = test_db.query(User).count()
     
-    # Run it again with different usernames
+    # Update the timestamp for the second run
+    class MockFaker2(MockFaker):
+        def __init__(self):
+            super().__init__()
+            self.timestamp = timestamp2
+    
+    # Second run with timestamp2
+    monkeypatch.setattr("app.db.init_db.Faker", lambda: MockFaker2())
+    
+    # Run it again with different timestamps in the usernames
     seed_data(test_db)
     second_count = test_db.query(User).count()
     
-    # Count should increase
-    assert second_count > first_count
+    # Count should increase by exactly 5 (the number of users created in seed_data)
+    assert second_count == first_count + 5
