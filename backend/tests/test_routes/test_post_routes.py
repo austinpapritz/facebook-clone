@@ -1,7 +1,3 @@
-import pytest
-from fastapi.testclient import TestClient
-from app.models.post import VisibilityType
-
 def test_get_posts(client, test_post):
     """Test retrieving all posts."""
     response = client.get("/api/v1/posts")
@@ -118,12 +114,12 @@ def test_update_nonexistent_post(client):
     assert response.status_code == 404
     assert "not found" in response.json()["detail"].lower()
 
-def test_delete_post(client, test_db):
+def test_delete_post(client, test_db, test_user):
     """Test deleting a post."""
     # Create a post to delete
     from app.models.post import Post
     temp_post = Post(
-        user_id=1,  # Assuming test_user has ID 1
+        user_id=test_user.id,
         content="Post to delete"
     )
     test_db.add(temp_post)

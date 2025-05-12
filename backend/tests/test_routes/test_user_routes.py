@@ -1,7 +1,3 @@
-import pytest
-from fastapi.testclient import TestClient
-import json
-
 def test_get_users(client, test_user):
     """Test retrieving all users."""
     response = client.get("/api/v1/users")

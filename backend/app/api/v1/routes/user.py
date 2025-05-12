@@ -69,7 +69,7 @@ def update_user(user_id: int, user_update: UserUpdate, db: Session = Depends(get
             detail=f"User with ID {user_id} not found"
         )
 
-    update_data = user_update.dict(exclude_unset=True)
+    update_data = user_update.model_dump(exclude_unset=True)
 
     if "password" in update_data:
         password = update_data.pop("password")

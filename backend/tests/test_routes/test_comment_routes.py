@@ -1,6 +1,3 @@
-import pytest
-from fastapi.testclient import TestClient
-
 def test_get_comments(client, test_comment):
     """Test retrieving all comments."""
     response = client.get("/api/v1/comments")
@@ -102,13 +99,13 @@ def test_update_nonexistent_comment(client):
     assert response.status_code == 404
     assert "not found" in response.json()["detail"].lower()
 
-def test_delete_comment(client, test_db):
+def test_delete_comment(client, test_db, test_user, test_post):
     """Test deleting a comment."""
     # Create a comment to delete
     from app.models.comment import Comment
     temp_comment = Comment(
-        user_id=1,  # Assuming test_user has ID 1
-        post_id=1,  # Assuming test_post has ID 1
+        user_id=test_user.id,
+        post_id=test_post.id,
         content="Comment to delete"
     )
     test_db.add(temp_comment)

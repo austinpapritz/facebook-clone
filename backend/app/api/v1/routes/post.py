@@ -49,7 +49,7 @@ def update_post(post_id: int, post_update: PostUpdate, db: Session = Depends(get
             detail=f"Post with ID {post_id} not found"
         )
 
-    update_data = post_update.dict(exclude_unset=True)
+    update_data = post_update.model_dump(exclude_unset=True)
 
     for key, value in update_data.items():
         setattr(db_post, key, value)
