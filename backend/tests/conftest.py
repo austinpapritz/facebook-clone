@@ -3,6 +3,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 from fastapi.testclient import TestClient
+from contextlib import asynccontextmanager
 
 from app.db.base import Base
 from app.main import app
@@ -14,15 +15,25 @@ from app.models.comment import Comment
 TEST_SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
 # Erase once real user data is used and handler is removed from main.py
-@pytest.fixture(scope="session", autouse=True)
-def patch_app():
-    original_startup_handlers = app.router.on_startup.copy()
-
-    app.router.on_startup.clear()
-
+@asynccontextmanager
+async def test_lifespan(app):
+    # No startup operations
     yield
+    # No shutdown operations
 
-    app.router.on_startup = original_startup_handlers
+# Override the lifespan for testing
+@pytest.fixture(scope="session", autouse=True)
+def override_lifespan():
+    # Store original lifespan
+    original_lifespan = app.router.lifespan_context
+    
+    # Replace with the test lifespan
+    app.router.lifespan_context = test_lifespan
+    
+    yield
+    
+    # Restore original lifespan (if needed for cleanup)
+    app.router.lifespan_context = original_lifespan
 
 @pytest.fixture(scope="function")
 def test_engine():
